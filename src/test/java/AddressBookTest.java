@@ -1,10 +1,5 @@
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookTest {
@@ -13,16 +8,15 @@ class AddressBookTest {
     void add() {
         AddressBook ab = new AddressBook();
         ab.add("John", "Avenue", 5, 32);
-        assertEquals("Avenue 5, 32", ab.getAddress("John"));
+        assertEquals(new AddressBook.Address("Avenue", 5, 32), ab.getAddress("John"));
     }
 
     @Test
     void delete() {
         AddressBook ab = new AddressBook();
         ab.add("John", "Avenue", 5, 32);
-        assertEquals("Avenue 5, 32", ab.getAddress("John"));
-        ab.delete("John");
-        Throwable thr = assertThrows(IllegalArgumentException.class, () -> ab.getAddress("John"));
+        assertEquals(new AddressBook.Address("Avenue", 5, 32), ab.getAddress("John"));
+        Throwable thr = assertThrows(IllegalArgumentException.class, () -> ab.delete("John"));
         assertNotNull(thr.getMessage());
     }
 
@@ -31,14 +25,14 @@ class AddressBookTest {
         AddressBook ab = new AddressBook();
         ab.add("John", "Avenue", 5, 32);
         ab.changeAddress("John", "Laguna", 12, 3);
-        assertEquals("Laguna 12, 3", ab.getAddress("John"));
+        assertEquals(new AddressBook.Address("Laguna", 12, 3), ab.getAddress("John"));
     }
 
     @Test
     void getAddress() {
         AddressBook ab = new AddressBook();
         ab.add("John", "Avenue", 5, 32);
-        assertEquals("Avenue 5, 32", ab.getAddress("John"));
+        assertEquals(new AddressBook.Address("Avenue", 5, 32), ab.getAddress("John"));
     }
 
     @Test
@@ -64,5 +58,27 @@ class AddressBookTest {
         al.add("Thor");
         al.add("Loki");
         assertEquals(al, ab.getPeopleByStreetAndBuild("Avenue", 3));
+    }
+
+    @Test
+    void equalsTest(){
+        AddressBook ab = new AddressBook();
+        ab.add("John", "Avenue", 5, 32);
+        ab.add("Loki", "Avenue", 3, 42);
+        AddressBook ad = new AddressBook();
+        ad.add("John", "Avenue", 5, 32);
+        ad.add("Loki", "Avenue", 3, 42);
+        assertEquals(ad, ab);
+    }
+
+    @Test
+    void hashCodeTest(){
+        AddressBook ab = new AddressBook();
+        ab.add("John", "Avenue", 5, 32);
+        ab.add("Loki", "Avenue", 3, 42);
+        AddressBook ad = new AddressBook();
+        ad.add("John", "Avenue", 5, 32);
+        ad.add("Loki", "Avenue", 3, 42);
+        assertEquals(ad.hashCode(), ab.hashCode());
     }
 }
